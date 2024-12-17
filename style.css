@@ -89,3 +89,54 @@ border-bottom: 1px solid #ffffff;
     font-weight: bold;
     cursor: pointer;
 }
+/* Formularz kontaktowy */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 400px;
+    margin: 20px auto;
+}
+
+label {
+    font-weight: bold;
+}
+
+input, textarea {
+    padding: 8px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+button {
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Błędy walidacji */
+.error-message {
+    color: red;
+    font-size: 0.9em;
+}
+
+/* CAPTCHA */
+.captcha-container {
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
