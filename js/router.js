@@ -70,7 +70,8 @@ function RenderGalleryPage() {
     for (let i = 1; i <= 9; i++) {
         let img = document.createElement('img');
         img.classList.add('gallery-img', 'lazy');
-        img.dataset.src = `https://via.placeholder.com/150?text=Image+${i}`;
+        img.dataset.src = `images/Image${i}.jpg`;
+        //img.dataset.src = `https://via.placeholder.com/150?text=Image+${i}`;
         galleryContainer.appendChild(img);
     }
 
