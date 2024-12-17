@@ -13,26 +13,22 @@ document.getElementById('theme-toggle').addEventListener('click', () => {
     document.body.classList.toggle('dark-mode');
 });
 
-document.querySelector('#about-link').addEventListener('click', () => {
-    let stateObj = { page: 'about' };
-    document.title = 'About';
-    history.pushState(stateObj, "about", "?about");
-    RenderAboutPage();
+document.querySelector('header').addEventListener('click', (event) => {
+    if (event.target.id === 'about-link') {
+        changePage('about', RenderAboutPage);
+    } else if (event.target.id === 'contact-link') {
+        changePage('contact', RenderContactPage);
+    } else if (event.target.id === 'gallery-link') {
+        changePage('gallery', RenderGalleryPage);
+    }
 });
 
-document.querySelector('#contact-link').addEventListener('click', () => {
-    let stateObj = { page: 'contact' };
-    document.title = 'Contact';
-    history.pushState(stateObj, "contact", "?contact");
-    RenderContactPage();
-});
-
-document.querySelector('#gallery-link').addEventListener('click', () => {
-    let stateObj = { page: 'gallery' };
-    document.title = 'Gallery';
-    history.pushState(stateObj, "gallery", "?gallery");
-    RenderGalleryPage();
-});
+function changePage(page, renderFunction) {
+    let stateObj = { page };
+    document.title = page.charAt(0).toUpperCase() + page.slice(1);
+    history.pushState(stateObj, page, `?${page}`);
+    renderFunction();
+}
 
 function RenderAboutPage() {
     document.querySelector('main').innerHTML = `<h1 class="title">About Me</h1>
@@ -70,6 +66,7 @@ function RenderGalleryPage() {
     const modalImage = document.getElementById('modal-image');
     const closeModal = document.getElementById('close-modal');
 
+    // Dodanie przykładowych obrazów
     for (let i = 1; i <= 9; i++) {
         let img = document.createElement('img');
         img.classList.add('gallery-img', 'lazy');
@@ -77,25 +74,22 @@ function RenderGalleryPage() {
         galleryContainer.appendChild(img);
     }
 
+    // Lazy loading
     const lazyImages = document.querySelectorAll('.lazy');
     const observer = new IntersectionObserver((entries, observer) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const img = entry.target;
-                fetch(img.dataset.src)
-                    .then(response => response.blob())
-                    .then(blob => {
-                        const url = URL.createObjectURL(blob);
-                        img.src = url;
-                        img.classList.remove('lazy');
-                        observer.unobserve(img);
-                    });
+                img.src = img.dataset.src;
+                img.classList.remove('lazy');
+                observer.unobserve(img);
             }
         });
     });
 
     lazyImages.forEach(img => observer.observe(img));
 
+    // Modal
     galleryContainer.addEventListener('click', (event) => {
         if (event.target.classList.contains('gallery-img')) {
             modal.style.display = 'block';
@@ -115,10 +109,14 @@ function RenderGalleryPage() {
 }
 
 function popStateHandler() {
-    let loc = window.location.href.toString().split(window.location.host)[1];
-    if (loc === pageUrls.contact) { RenderContactPage(); }
-    if (loc === pageUrls.about) { RenderAboutPage(); }
-    if (loc === pageUrls.gallery) { RenderGalleryPage(); }
+    let loc = window.location.search;
+    if (loc === '?contact') { RenderContactPage(); }
+    else if (loc === '?about') { RenderAboutPage(); }
+    else if (loc === '?gallery') { RenderGalleryPage(); }
+    else {
+        document.querySelector('main').innerHTML = `<h1 class="title">Hello world!</h1>
+        <p>Lorem Ipsum</p>`;
+    }
 }
 
 window.onpopstate = popStateHandler;
